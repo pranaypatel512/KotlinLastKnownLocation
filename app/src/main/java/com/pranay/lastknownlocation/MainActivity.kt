@@ -19,20 +19,25 @@ import com.google.android.gms.tasks.OnSuccessListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
-
+/**
+ * Created by Pranay on 7/16/2017.
+ */
+//https://developer.android.com/training/location/retrieve-current.html
 class MainActivity : AppCompatActivity() {
 
     var TAG: String = "MainActivity"
     var FASTEST_INTERVAL: Long = 8 * 1000 // 8 SECOND
     var UPDATE_INTERVAL: Long = 2000 // 2 SECOND
     var FINE_LOCATION_REQUEST: Int = 888
+    lateinit var toast: Toast
 
     lateinit var locationRequest: LocationRequest
+    @SuppressLint("ShowToast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
+        toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
         if (checkPermissions()) {
             initLocationUpdate()
         }
@@ -47,6 +52,9 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
             //Start Location update as define intervals
     fun initLocationUpdate() {
+
+        // Check API revision for New Location Update
+        //https://developers.google.com/android/guides/releases#june_2017_-_version_110
 
         //init location request to start retrieving location update
         locationRequest = LocationRequest()
@@ -89,7 +97,9 @@ class MainActivity : AppCompatActivity() {
                 java.lang.Double.toString(location.latitude) + "," +
                 java.lang.Double.toString(location.longitude)
         tvLocationDetails.text = msg
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+
+        toast.setText(msg)
+        toast.show()
     }
 
     @SuppressLint("MissingPermission")
@@ -151,5 +161,19 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
+    }
+
+    override fun onStop() {
+        if (toast != null) {
+            toast.cancel()
+        }
+        super.onStop()
+    }
+
+    override fun onPause() {
+        if (toast != null) {
+            toast.cancel()
+        }
+        super.onPause()
     }
 }
