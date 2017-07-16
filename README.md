@@ -12,6 +12,7 @@
 
 #### Java Version
 * [LastKnownLocation](https://github.com/pranaypatel512/LastKnownLocation)
+
 #### Pull Requests
 
 I welcome and encourage all pull requests to learn something new.
@@ -19,3 +20,7 @@ I welcome and encourage all pull requests to learn something new.
 #### Find this project useful ? ❤️
 
 Support it by clicking the ⭐️ button on the upper right of this page. ✌️
+
+### References
+* [Getting the Last Known Location](https://developer.android.com/training/location/retrieve-current.html)
+* [Retrieving Location with LocationServices API](https://guides.codepath.com/android/Retrieving-Location-with-LocationServices-API)
