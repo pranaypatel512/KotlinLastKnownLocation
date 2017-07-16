@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Last Known Location</string>
+    <string name="action_settings">Settings</string>
+</resources>
