@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Last Known Location</string>
     <string name="action_settings">Settings</string>
+    <string name="rational_location_permission">Location permission require to access current location.</string>
+    <string name="ok">OK</string>
+    <string name="get_location">Get Location</string>
 </resources>
