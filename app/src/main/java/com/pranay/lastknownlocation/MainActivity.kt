@@ -18,6 +18,13 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import android.location.LocationManager
+import android.R.string.cancel
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.support.v7.app.AlertDialog
+
 
 /**
  * Created by Pranay on 7/16/2017.
@@ -38,15 +45,38 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
-        if (checkPermissions()) {
+        if (checkPermissionAccessFineLocation()) {
             initLocationUpdate()
         }
         btnGetLocation.setOnClickListener {
-            if (checkPermissions()) {
+            if (checkPermissionAccessFineLocation()) {
                 initLocationUpdate()
             }
         }
 
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Toast.makeText(this, "GPS is Enabled in your devide", Toast.LENGTH_SHORT).show()
+        } else {
+            showGPSDisabledAlertToUser()
+        }
+    }
+
+    private fun showGPSDisabledAlertToUser() {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setMessage("GPS está desligado no seu dispositivo, gostaria de habilitá-lo?")
+                .setCancelable(false)
+                .setPositiveButton("Ir para configurações e ativar o GPS",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            val callGPSSettingIntent = Intent(
+                                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                            startActivity(callGPSSettingIntent)
+                        })
+        alertDialogBuilder.setNegativeButton("Não, obrigado!",
+                DialogInterface.OnClickListener { dialog, id -> dialog.cancel() })
+        val alert = alertDialogBuilder.create()
+        alert.show()
     }
 
     @SuppressLint("MissingPermission")
@@ -120,11 +150,25 @@ class MainActivity : AppCompatActivity() {
                 })
     }
 
-    private fun checkPermissions(): Boolean {
+    private fun checkPermissionAccessFineLocation(): Boolean {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Already had permission for ACCESS_FINE_LOCATION")
             return true
         } else {
+            Log.i(TAG, "Has NO permission for ACCESS_FINE_LOCATION")
+            requestPermissions()
+            return false
+        }
+    }
+
+    private fun checkPermissionAccessCoarseLocation(): Boolean {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Already had permission for ACCESS_FINE_LOCATION")
+            return true
+        } else {
+            Log.i(TAG, "Has NO permission for ACCESS_FINE_LOCATION")
             requestPermissions()
             return false
         }
